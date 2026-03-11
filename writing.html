@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peter's Lab Blog Writer</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-card hero-card-compact">
+      <div class="hero-copy compact">
+        <p class="hero-kicker">PetersLab</p>
+        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
+      </div>
+    </header>
+
+    <nav class="step-nav compact">
+      <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-complete" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-current" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>Current</small></span></button>
+      <button type="button" class="step-chip" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>Waiting</small></span></button>
+      <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>Waiting</small></span></button>
+    </nav>
+
+    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+
+    <main class="page-card">
+      <div class="loading-stage loading-stage-writing">
+        <div class="loading-visual writing-visual-compact">
+          <div class="typing-sheet">
+            <div class="typing-line long"></div>
+            <div class="typing-line mid"></div>
+            <div class="typing-line short"></div>
+            <div class="typing-cursor"></div>
+          </div>
+          <div class="writing-card card-a"></div>
+          <div class="writing-card card-b"></div>
+        </div>
+        <div class="loading-copy">
+          <strong id="loading-headline" class="loading-headline"></strong>
+          <p id="loading-body" class="loading-subcopy"></p>
+          <ul id="loading-list" class="loading-message-list"></ul>
+        </div>
+      </div>
+      <div id="loading-error" class="error-card is-hidden">
+        <strong data-i18n="fetchErrorTitle"></strong>
+        <p id="loading-error-text" data-i18n="fetchErrorBody"></p>
+        <div class="panel-actions">
+          <button type="button" id="retry-button" class="primary-button" data-i18n="retry"></button>
+          <button type="button" id="back-button" class="secondary-button">Back</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+  <script src="./writing-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "peterslab-editorial-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenAI web-search based PetersLab editorial workflow MVP",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

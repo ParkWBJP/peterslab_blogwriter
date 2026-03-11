@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peter's Lab Blog Writer</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-card hero-card-compact">
+      <div class="hero-copy compact">
+        <p class="hero-kicker">PetersLab</p>
+        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
+      </div>
+      <div class="hero-controls compact">
+        <div class="control-card">
+          <span class="control-label" data-i18n="language">언어</span>
+          <div class="segmented-control">
+            <button type="button" class="segment is-active" data-lang-switch="ko">KO</button>
+            <button type="button" class="segment" data-lang-switch="en">EN</button>
+            <button type="button" class="segment" data-lang-switch="ja">JA</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="step-nav compact">
+      <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-complete" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-complete" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>Done</small></span></button>
+      <button type="button" class="step-chip is-current" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>Current</small></span></button>
+      <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>Waiting</small></span></button>
+    </nav>
+
+    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+
+    <main class="page-card page-stack">
+      <div class="panel-head compact">
+        <div>
+          <p class="panel-kicker">Step 5</p>
+          <h2 data-i18n="stepReviewTitle">Review &amp; Edit</h2>
+        </div>
+        <div class="panel-actions">
+          <button type="button" id="back-button" class="secondary-button">Back</button>
+          <button type="button" id="save-button" class="secondary-button">Save</button>
+          <button type="button" id="regenerate-button" class="secondary-button">Regenerate</button>
+        </div>
+      </div>
+
+      <div class="summary-grid compact">
+        <div class="summary-card"><span class="summary-label" data-i18n="summaryTrend">Selected Trend</span><strong id="summary-trend">-</strong></div>
+        <div class="summary-card"><span class="summary-label" data-i18n="summaryKeyword">Selected Keyword</span><strong id="summary-keyword">-</strong></div>
+        <div class="summary-card"><span class="summary-label" data-i18n="summaryLanguage">Language</span><strong id="summary-language">-</strong></div>
+        <div class="summary-card"><span class="summary-label" data-i18n="summaryStatus">Current Status</span><strong id="summary-status">-</strong></div>
+      </div>
+
+      <div class="review-layout compact">
+        <article class="document-card">
+          <div class="document-form compact">
+            <label class="field"><span class="field-label" data-i18n="fieldTitle">Title</span><input id="doc-title-input" type="text"></label>
+            <label class="field"><span class="field-label" data-i18n="fieldLead">Lead</span><textarea id="doc-lead-input" rows="4"></textarea></label>
+            <label class="field"><span class="field-label" data-i18n="fieldBody">Body</span><textarea id="doc-body-input" rows="16"></textarea></label>
+            <label class="field"><span class="field-label" data-i18n="fieldCta">CTA</span><textarea id="doc-cta-input" rows="3"></textarea></label>
+            <label class="field"><span class="field-label" data-i18n="fieldMeta">Meta</span><textarea id="doc-meta-input" rows="3"></textarea></label>
+            <label class="field"><span class="field-label" data-i18n="fieldKeywords">Keywords</span><input id="doc-keywords-input" type="text"></label>
+          </div>
+        </article>
+        <aside class="insight-column compact">
+          <section class="surface-card">
+            <h3 data-i18n="whyThisDraft">Why this direction?</h3>
+            <div id="rationale-panel" class="info-stack"></div>
+          </section>
+          <section class="surface-card">
+            <h3 data-i18n="riskReview">Expression Notes</h3>
+            <div id="compliance-panel" class="info-stack"></div>
+          </section>
+          <section class="surface-card">
+            <h3 data-i18n="trendEvidence">Trend Evidence</h3>
+            <div id="trend-evidence-panel" class="info-stack"></div>
+          </section>
+        </aside>
+      </div>
+
+      <div class="step-footer compact">
+        <button type="button" id="complete-button" class="primary-button">Move to Completed</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+  <script src="./review-page.js"></script>
+</body>
+</html>
