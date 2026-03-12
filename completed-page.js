@@ -1,14 +1,15 @@
 (async () => {
   const state = PLBW.loadState();
   await PLBW.refreshHealth(state);
+
   if (!state.draftPayload?.safeVersion) {
-    PLBW.go("./review.html");
+    PLBW.goPhase("review");
     return;
   }
 
   const title = document.getElementById("completed-title");
   const time = document.getElementById("completed-time");
-  const upload = document.getElementById("completed-upload-status");
+  const uploadStatus = document.getElementById("completed-upload-status");
   const language = document.getElementById("completed-language");
   const summary = document.getElementById("completed-summary");
   const chip = document.getElementById("upload-status-chip");
@@ -25,19 +26,6 @@
     return PLBW.t(state, "uploadReady");
   }
 
-  function render() {
-    PLBW.renderFrame(state, "completed");
-    title.textContent = PLBW.getText(state.draftPayload.safeVersion.title, state.language);
-    time.textContent = state.completedAt || "-";
-    upload.textContent = uploadLabel();
-    language.textContent = PLBW.languageLabel(state.language, state.language);
-    summary.textContent = PLBW.getText(state.draftPayload.reviewSummary, state.language) || "";
-    chip.textContent = uploadLabel();
-    chip.className = `surface-chip ${state.notion.status === "done" ? "ready" : !state.health.notionReady || state.notion.status === "failed" ? "error" : "neutral"}`;
-    notionLink.classList.toggle("is-hidden", !state.notion.url);
-    if (state.notion.url) notionLink.href = state.notion.url;
-  }
-
   function articleText() {
     return [
       PLBW.getText(state.draftPayload.safeVersion.title, state.language),
@@ -48,25 +36,43 @@
       "",
       `CTA: ${PLBW.getText(state.draftPayload.safeVersion.cta, state.language)}`,
       `Meta: ${PLBW.getText(state.draftPayload.safeVersion.meta, state.language)}`,
-      `Image Keywords: ${PLBW.getText(state.draftPayload.safeVersion.keywords, state.language)}`
+      `Image Keywords: ${PLBW.getText(state.draftPayload.safeVersion.keywords, state.language)}`,
     ].join("\n");
+  }
+
+  function render() {
+    PLBW.renderFrame(state, "completed");
+    title.textContent = PLBW.getText(state.draftPayload.safeVersion.title, state.language) || "-";
+    time.textContent = state.completedAt || "-";
+    uploadStatus.textContent = uploadLabel();
+    language.textContent = PLBW.languageLabel(state.language, state.language);
+    summary.textContent = PLBW.getText(state.draftPayload.reviewSummary, state.language) || "-";
+    chip.textContent = uploadLabel();
+    chip.className = `surface-chip ${state.notion.status === "done" ? "ready" : state.notion.status === "failed" ? "error" : "neutral"}`;
+    uploadButton.disabled = state.notion.status === "done";
+    notionLink.classList.toggle("is-hidden", !state.notion.url);
+    if (state.notion.url) {
+      notionLink.href = state.notion.url;
+    }
   }
 
   uploadButton.addEventListener("click", async () => {
     if (!state.health.notionReady) {
       state.notion.status = "failed";
-      PLBW.saveState(state);
+      PLBW.setBanner(state, "notReadyForNotion", "error");
       render();
       return;
     }
-    const trend = state.trendPayload.trends[state.selectedTrendIndex];
+
+    const trend = state.trendPayload?.trends?.[state.selectedTrendIndex];
+
     try {
       const payload = await PLBW.postJSON("/api/notion-upload", {
         outputLanguage: state.language,
         selection: {
-          trendTitle: trend?.[`${{ ko: "titleKo", en: "titleEn", ja: "titleJa" }[state.language]}`] || "",
+          trendTitle: trend?.[state.language === "ko" ? "titleKo" : state.language === "en" ? "titleEn" : "titleJa"] || "",
           keyword: state.selectedKeyword,
-          direction: state.direction
+          direction: state.direction,
         },
         draft: {
           title: PLBW.getText(state.draftPayload.safeVersion.title, state.language),
@@ -74,16 +80,19 @@
           body: PLBW.getText(state.draftPayload.safeVersion.body, state.language),
           cta: PLBW.getText(state.draftPayload.safeVersion.cta, state.language),
           meta: PLBW.getText(state.draftPayload.safeVersion.meta, state.language),
-          keywords: PLBW.getText(state.draftPayload.safeVersion.keywords, state.language)
+          keywords: PLBW.getText(state.draftPayload.safeVersion.keywords, state.language),
         },
-        compliance: state.draftPayload.compliance
+        compliance: state.draftPayload.compliance,
       });
+
       state.notion.status = "done";
-      state.notion.url = payload.url;
+      state.notion.url = payload.url || "";
+      PLBW.setBanner(state, "uploadSuccess", "success");
       PLBW.saveState(state);
       render();
-    } catch {
+    } catch (error) {
       state.notion.status = "failed";
+      PLBW.setBanner(state, "uploadFailedBody", "error");
       PLBW.saveState(state);
       render();
     }
@@ -92,21 +101,24 @@
   copyButton.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(articleText());
+      PLBW.setBanner(state, "copySuccess", "success");
+      render();
     } catch {
       const area = document.createElement("textarea");
       area.value = articleText();
       document.body.appendChild(area);
       area.select();
-      document.execCommand("copy");
+      const copied = document.execCommand("copy");
       area.remove();
+      PLBW.setBanner(state, copied ? "copySuccess" : "copyFailed", copied ? "success" : "error");
+      render();
     }
   });
 
-  backButton.addEventListener("click", () => PLBW.go("./review.html"));
+  backButton.addEventListener("click", () => PLBW.goPhase("review"));
   newButton.addEventListener("click", () => {
-    const reset = PLBW.resetState(state.language);
-    PLBW.saveState(reset);
-    PLBW.go("./index.html");
+    PLBW.resetState(state.language);
+    PLBW.goPhase("trend");
   });
 
   window.addEventListener("plbw-language-change", render);

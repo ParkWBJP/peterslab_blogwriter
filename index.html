@@ -8,16 +8,18 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="hero-card hero-card-compact">
-      <div class="hero-copy compact">
-        <p class="hero-kicker">PetersLab</p>
-        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
-        <p class="hero-description" data-i18n="productDescription">
-          일본 반려동물 시장 트렌드를 바탕으로 공감형 블로그 초안을 만들고 최종 검토까지 이어지는 단계형 도구입니다.
-        </p>
-      </div>
-      <div class="hero-controls compact">
-        <div class="control-card">
+    <header class="app-header">
+      <a href="./index.html" class="brand-lockup" data-brand-home>
+        <img src="./peterslab_logo.png" alt="PetersLab" class="brand-logo">
+        <div class="brand-copy">
+          <span class="brand-eyebrow" data-i18n="homeEyebrow">PetersLab Editorial Tool</span>
+          <strong data-i18n="productName">Peter's Lab Blog Writer</strong>
+          <p data-i18n="productDescription">일본 반려동물 시장 흐름을 바탕으로 블로그 초안을 만들고 최종 검토까지 이어가는 단계형 워크플로우입니다.</p>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <div class="control-block">
           <span class="control-label" data-i18n="language">언어</span>
           <div class="segmented-control">
             <button type="button" class="segment is-active" data-lang-switch="ko">KO</button>
@@ -25,7 +27,7 @@
             <button type="button" class="segment" data-lang-switch="ja">JA</button>
           </div>
         </div>
-        <div class="control-card">
+        <div class="control-block control-block-status">
           <span class="control-label" data-i18n="connectionStatus">연결 상태</span>
           <div class="status-row">
             <span id="openai-status" class="status-chip neutral">OpenAI</span>
@@ -35,91 +37,104 @@
       </div>
     </header>
 
-    <nav class="step-nav compact">
-      <button type="button" class="step-chip is-current" data-phase-nav="trend">
-        <span class="step-index">01</span>
-        <span class="step-meta">
-          <strong data-i18n="stepTrendTitle">Trend Scan</strong>
-          <small data-step-state>Current</small>
-        </span>
-      </button>
-      <button type="button" class="step-chip" data-phase-nav="trendLoading">
-        <span class="step-index">02</span>
-        <span class="step-meta">
-          <strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong>
-          <small data-step-state>Waiting</small>
-        </span>
-      </button>
-      <button type="button" class="step-chip" data-phase-nav="idea">
-        <span class="step-index">03</span>
-        <span class="step-meta">
-          <strong data-i18n="stepIdeaTitle">Idea Discovery</strong>
-          <small data-step-state>Waiting</small>
-        </span>
-      </button>
-      <button type="button" class="step-chip" data-phase-nav="writingLoading">
-        <span class="step-index">04</span>
-        <span class="step-meta">
-          <strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong>
-          <small data-step-state>Waiting</small>
-        </span>
-      </button>
-      <button type="button" class="step-chip" data-phase-nav="review">
-        <span class="step-index">05</span>
-        <span class="step-meta">
-          <strong data-i18n="stepReviewTitle">Review &amp; Edit</strong>
-          <small data-step-state>Waiting</small>
-        </span>
-      </button>
-      <button type="button" class="step-chip" data-phase-nav="completed">
-        <span class="step-index">06</span>
-        <span class="step-meta">
-          <strong data-i18n="stepCompletedTitle">Completed</strong>
-          <small data-step-state>Waiting</small>
-        </span>
-      </button>
-    </nav>
-
-    <div id="status-banner" class="status-banner" data-i18n="heroGuide">
-      위에서 아래로 따라가면 트렌드 선택부터 최종 등록 준비까지 순서대로 진행할 수 있습니다.
+    <div class="hint-row">
+      <p id="top-hint" class="top-hint"></p>
+      <nav class="step-nav">
+        <button type="button" class="step-chip is-current" data-phase-nav="trend">
+          <span class="step-index">01</span>
+          <span class="step-meta">
+            <strong data-i18n="stepTrendTitle">Trend Scan</strong>
+            <small data-step-state>진행 중</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="trendLoading">
+          <span class="step-index">02</span>
+          <span class="step-meta">
+            <strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="idea">
+          <span class="step-index">03</span>
+          <span class="step-meta">
+            <strong data-i18n="stepIdeaTitle">Idea Discovery</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="writingLoading">
+          <span class="step-index">04</span>
+          <span class="step-meta">
+            <strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="review">
+          <span class="step-index">05</span>
+          <span class="step-meta">
+            <strong data-i18n="stepReviewTitle">Review &amp; Edit</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="completed">
+          <span class="step-index">06</span>
+          <span class="step-meta">
+            <strong data-i18n="stepCompletedTitle">Completed</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+      </nav>
     </div>
 
-    <main class="page-card">
-      <div class="panel-head compact">
+    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+
+    <main class="page-panel page-panel-tight">
+      <section class="intro-card">
         <div>
-          <p class="panel-kicker">Step 1</p>
-          <h2 data-i18n="stepTrendTitle">Trend Scan</h2>
+          <span class="panel-kicker">Step 1</span>
+          <h1 data-i18n="trendIntroTitle">어떤 트렌드에서 시작할까요?</h1>
+          <p data-i18n="trendIntroBody">필터를 고른 뒤 스캔을 시작하면, 지금 시점에 어울리는 주제 후보를 정리해 드립니다.</p>
         </div>
-      </div>
-      <div class="filter-grid compact">
-        <label class="field">
-          <span class="field-label">Pet Type</span>
-          <select id="filter-pet-type">
-            <option value="common" data-i18n-option="petCommon">Common</option>
-            <option value="dog" data-i18n-option="petDog">Dog</option>
-            <option value="cat" data-i18n-option="petCat">Cat</option>
-          </select>
-        </label>
-        <label class="field">
-          <span class="field-label">Theme</span>
-          <select id="filter-theme-type">
-            <option value="health" data-i18n-option="themeHealth">Health</option>
-            <option value="lifestyle" data-i18n-option="themeLifestyle">Lifestyle</option>
-            <option value="senior" data-i18n-option="themeSenior">Senior</option>
-            <option value="seasonal" data-i18n-option="themeSeasonal">Seasonal</option>
-            <option value="anniversary" data-i18n-option="themeAnniversary">Anniversary</option>
-            <option value="homecare" data-i18n-option="themeHomecare">Home Care</option>
-          </select>
-        </label>
-        <label class="field">
-          <span class="field-label">Search Scope</span>
-          <select id="filter-scope">
-            <option value="japan" data-i18n-option="scopeJapan">Japan Focus</option>
-            <option value="global" data-i18n-option="scopeGlobal">Include Global Signals</option>
-          </select>
-        </label>
-        <button type="button" id="scan-button" class="primary-button">Start Trend Scan</button>
-      </div>
+        <div class="intro-accent">
+          <span class="pet-dot"></span>
+          <span class="pet-dot pet-dot-small"></span>
+          <span class="intro-badge">AI Scan</span>
+        </div>
+      </section>
+
+      <section class="action-card trend-action-card">
+        <div class="filter-grid">
+          <label class="field">
+            <span class="field-label" data-i18n="petType">반려동물 유형</span>
+            <select id="filter-pet-type">
+              <option value="common" data-i18n-option="petCommon">공통</option>
+              <option value="dog" data-i18n-option="petDog">강아지</option>
+              <option value="cat" data-i18n-option="petCat">고양이</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label" data-i18n="themeType">주제</span>
+            <select id="filter-theme-type">
+              <option value="health" data-i18n-option="themeHealth">건강</option>
+              <option value="lifestyle" data-i18n-option="themeLifestyle">생활</option>
+              <option value="senior" data-i18n-option="themeSenior">노령</option>
+              <option value="seasonal" data-i18n-option="themeSeasonal">계절</option>
+              <option value="anniversary" data-i18n-option="themeAnniversary">기념일</option>
+              <option value="homecare" data-i18n-option="themeHomecare">홈케어</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label" data-i18n="scope">검색 범위</span>
+            <select id="filter-scope">
+              <option value="japan" data-i18n-option="scopeJapan">일본 중심</option>
+              <option value="global" data-i18n-option="scopeGlobal">글로벌 참고 포함</option>
+            </select>
+          </label>
+          <div class="field action-field">
+            <span class="field-label field-label-faded"> </span>
+            <button type="button" id="scan-button" class="primary-button" data-i18n="startTrendScan">트렌드 스캔 시작</button>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 

@@ -8,13 +8,18 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="hero-card hero-card-compact">
-      <div class="hero-copy compact">
-        <p class="hero-kicker">PetersLab</p>
-        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
-      </div>
-      <div class="hero-controls compact">
-        <div class="control-card">
+    <header class="app-header">
+      <a href="./index.html" class="brand-lockup" data-brand-home>
+        <img src="./peterslab_logo.png" alt="PetersLab" class="brand-logo">
+        <div class="brand-copy">
+          <span class="brand-eyebrow" data-i18n="homeEyebrow">PetersLab Editorial Tool</span>
+          <strong data-i18n="productName">Peter's Lab Blog Writer</strong>
+          <p data-i18n="productDescription">일본 반려동물 시장 흐름을 바탕으로 블로그 초안을 만들고 최종 검토까지 이어가는 단계형 워크플로우입니다.</p>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <div class="control-block">
           <span class="control-label" data-i18n="language">언어</span>
           <div class="segmented-control">
             <button type="button" class="segment is-active" data-lang-switch="ko">KO</button>
@@ -25,67 +30,104 @@
       </div>
     </header>
 
-    <nav class="step-nav compact">
-      <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-current" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>Current</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>Waiting</small></span></button>
-    </nav>
+    <div class="hint-row">
+      <p id="top-hint" class="top-hint"></p>
+      <nav class="step-nav">
+        <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-current" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>진행 중</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>대기</small></span></button>
+      </nav>
+    </div>
 
-    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+    <div id="status-banner" class="status-banner" data-i18n="articleReady"></div>
 
-    <main class="page-card page-stack">
-      <div class="panel-head compact">
-        <div>
-          <p class="panel-kicker">Step 5</p>
-          <h2 data-i18n="stepReviewTitle">Review &amp; Edit</h2>
+    <main class="page-panel page-panel-stack">
+      <section class="section-card">
+        <div class="section-head">
+          <div>
+            <span class="panel-kicker">Step 5</span>
+            <h1 data-i18n="documentTitle">최종 문서를 검토하고 수정하세요</h1>
+            <p data-i18n="documentBody">선택한 언어 기준으로 전체 글만 표시합니다. 필요한 부분만 직접 다듬은 뒤 완료 단계로 이동하세요.</p>
+          </div>
+          <div class="inline-actions">
+            <button type="button" id="back-button" class="secondary-button" data-i18n="back">이전</button>
+            <button type="button" id="save-button" class="secondary-button" data-i18n="saveDraft">임시 저장</button>
+            <button type="button" id="regenerate-button" class="secondary-button" data-i18n="regenerate">다시 생성</button>
+          </div>
         </div>
-        <div class="panel-actions">
-          <button type="button" id="back-button" class="secondary-button">Back</button>
-          <button type="button" id="save-button" class="secondary-button">Save</button>
-          <button type="button" id="regenerate-button" class="secondary-button">Regenerate</button>
+
+        <div class="summary-strip">
+          <div class="summary-pill">
+            <span data-i18n="summaryTrend">선택한 트렌드</span>
+            <strong id="summary-trend">-</strong>
+          </div>
+          <div class="summary-pill">
+            <span data-i18n="summaryKeyword">선택한 키워드</span>
+            <strong id="summary-keyword">-</strong>
+          </div>
+          <div class="summary-pill">
+            <span data-i18n="summaryLanguage">사용 언어</span>
+            <strong id="summary-language">-</strong>
+          </div>
+          <div class="summary-pill">
+            <span data-i18n="summaryStatus">현재 상태</span>
+            <strong id="summary-status">-</strong>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="summary-grid compact">
-        <div class="summary-card"><span class="summary-label" data-i18n="summaryTrend">Selected Trend</span><strong id="summary-trend">-</strong></div>
-        <div class="summary-card"><span class="summary-label" data-i18n="summaryKeyword">Selected Keyword</span><strong id="summary-keyword">-</strong></div>
-        <div class="summary-card"><span class="summary-label" data-i18n="summaryLanguage">Language</span><strong id="summary-language">-</strong></div>
-        <div class="summary-card"><span class="summary-label" data-i18n="summaryStatus">Current Status</span><strong id="summary-status">-</strong></div>
-      </div>
-
-      <div class="review-layout compact">
-        <article class="document-card">
-          <div class="document-form compact">
-            <label class="field"><span class="field-label" data-i18n="fieldTitle">Title</span><input id="doc-title-input" type="text"></label>
-            <label class="field"><span class="field-label" data-i18n="fieldLead">Lead</span><textarea id="doc-lead-input" rows="4"></textarea></label>
-            <label class="field"><span class="field-label" data-i18n="fieldBody">Body</span><textarea id="doc-body-input" rows="16"></textarea></label>
-            <label class="field"><span class="field-label" data-i18n="fieldCta">CTA</span><textarea id="doc-cta-input" rows="3"></textarea></label>
-            <label class="field"><span class="field-label" data-i18n="fieldMeta">Meta</span><textarea id="doc-meta-input" rows="3"></textarea></label>
-            <label class="field"><span class="field-label" data-i18n="fieldKeywords">Keywords</span><input id="doc-keywords-input" type="text"></label>
+      <section class="review-layout">
+        <article class="editor-card">
+          <div class="editor-surface">
+            <label class="field">
+              <span class="field-label" data-i18n="fieldTitle">제목</span>
+              <input id="doc-title-input" type="text">
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="fieldLead">리드문</span>
+              <textarea id="doc-lead-input" rows="4"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="fieldBody">본문</span>
+              <textarea id="doc-body-input" rows="18"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="fieldCta">CTA</span>
+              <textarea id="doc-cta-input" rows="3"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="fieldMeta">메타 설명</span>
+              <textarea id="doc-meta-input" rows="3"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label" data-i18n="fieldKeywords">이미지 키워드</span>
+              <input id="doc-keywords-input" type="text">
+            </label>
           </div>
         </article>
-        <aside class="insight-column compact">
-          <section class="surface-card">
-            <h3 data-i18n="whyThisDraft">Why this direction?</h3>
+
+        <aside class="review-aside">
+          <section class="side-card">
+            <h2 data-i18n="whyThisDraft">이 방향으로 작성한 이유</h2>
             <div id="rationale-panel" class="info-stack"></div>
           </section>
-          <section class="surface-card">
-            <h3 data-i18n="riskReview">Expression Notes</h3>
+          <section class="side-card">
+            <h2 data-i18n="riskReview">표현 조정 메모</h2>
             <div id="compliance-panel" class="info-stack"></div>
           </section>
-          <section class="surface-card">
-            <h3 data-i18n="trendEvidence">Trend Evidence</h3>
+          <section class="side-card">
+            <h2 data-i18n="trendEvidence">트렌드 참고 링크</h2>
             <div id="trend-evidence-panel" class="info-stack"></div>
           </section>
         </aside>
-      </div>
+      </section>
 
-      <div class="step-footer compact">
-        <button type="button" id="complete-button" class="primary-button">Move to Completed</button>
-      </div>
+      <section class="section-footer section-footer-wide">
+        <button type="button" id="complete-button" class="primary-button" data-i18n="moveCompleted">완료 단계로 이동</button>
+      </section>
     </main>
   </div>
 

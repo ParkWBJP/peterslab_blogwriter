@@ -8,13 +8,18 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="hero-card hero-card-compact">
-      <div class="hero-copy compact">
-        <p class="hero-kicker">PetersLab</p>
-        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
-      </div>
-      <div class="hero-controls compact">
-        <div class="control-card">
+    <header class="app-header">
+      <a href="./index.html" class="brand-lockup" data-brand-home>
+        <img src="./peterslab_logo.png" alt="PetersLab" class="brand-logo">
+        <div class="brand-copy">
+          <span class="brand-eyebrow" data-i18n="homeEyebrow">PetersLab Editorial Tool</span>
+          <strong data-i18n="productName">Peter's Lab Blog Writer</strong>
+          <p data-i18n="productDescription">일본 반려동물 시장 흐름을 바탕으로 블로그 초안을 만들고 최종 검토까지 이어가는 단계형 워크플로우입니다.</p>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <div class="control-block">
           <span class="control-label" data-i18n="language">언어</span>
           <div class="segmented-control">
             <button type="button" class="segment is-active" data-lang-switch="ko">KO</button>
@@ -25,46 +30,49 @@
       </div>
     </header>
 
-    <nav class="step-nav compact">
-      <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-current" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>Current</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>Waiting</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>Waiting</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>Waiting</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>Waiting</small></span></button>
-    </nav>
+    <div class="hint-row">
+      <p id="top-hint" class="top-hint"></p>
+      <nav class="step-nav">
+        <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-current" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>진행 중</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>대기</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>대기</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>대기</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>대기</small></span></button>
+      </nav>
+    </div>
 
-    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+    <div id="status-banner" class="status-banner" data-i18n="trendLoadingLead"></div>
 
-    <main class="page-card">
-      <div class="panel-head compact">
-        <div>
-          <p class="panel-kicker">Step 2</p>
-          <h2 data-i18n="stepTrendLoadingTitle">Trend Loading</h2>
-        </div>
-      </div>
-      <div class="loading-stage loading-stage-search">
+    <main class="page-panel">
+      <section class="loading-panel loading-panel-search">
         <div class="loading-visual search-visual">
-          <div class="search-ring ring-one"></div>
-          <div class="search-ring ring-two"></div>
-          <div class="search-card card-one"></div>
-          <div class="search-card card-two"></div>
-          <div class="search-card card-three"></div>
+          <div class="search-grid">
+            <span class="search-blip search-blip-a"></span>
+            <span class="search-blip search-blip-b"></span>
+            <span class="search-blip search-blip-c"></span>
+            <div class="scan-card scan-card-one"></div>
+            <div class="scan-card scan-card-two"></div>
+            <div class="scan-card scan-card-three"></div>
+          </div>
         </div>
+
         <div class="loading-copy">
-          <strong id="loading-headline" class="loading-headline"></strong>
-          <p id="loading-body" class="loading-subcopy"></p>
+          <span class="panel-kicker">Step 2</span>
+          <h1 id="loading-headline" data-i18n="trendLoadingTitle">트렌드를 정리하고 있습니다</h1>
+          <p id="loading-body" data-i18n="trendLoadingBody">몇 개의 실시간 신호를 읽고, 블로그로 발전시키기 쉬운 후보만 추리고 있습니다.</p>
           <ul id="loading-list" class="loading-message-list"></ul>
         </div>
-      </div>
-      <div id="loading-error" class="error-card is-hidden">
-        <strong data-i18n="fetchErrorTitle">데이터를 불러오는 중 문제가 발생했습니다</strong>
-        <p id="loading-error-text" data-i18n="fetchErrorBody"></p>
-        <div class="panel-actions">
+      </section>
+
+      <section id="loading-error" class="error-card is-hidden">
+        <strong data-error-title data-i18n="fetchErrorTitle">데이터를 불러오는 중 문제가 발생했습니다</strong>
+        <p data-error-body data-i18n="fetchErrorBody">잠시 후 다시 시도해 주세요. 네트워크 또는 API 설정을 함께 확인해 주세요.</p>
+        <div class="inline-actions">
           <button type="button" id="retry-button" class="primary-button" data-i18n="retry">다시 시도</button>
-          <button type="button" id="back-button" class="secondary-button" data-i18n="backToTrend">트렌드 단계로 돌아가기</button>
+          <button type="button" id="back-button" class="secondary-button" data-i18n="backToTrend">Trend Scan으로 돌아가기</button>
         </div>
-      </div>
+      </section>
     </main>
   </div>
 

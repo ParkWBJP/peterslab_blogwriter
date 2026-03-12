@@ -20,6 +20,12 @@ const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".md": "text/markdown; charset=utf-8",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
+  ".ico": "image/x-icon",
+  ".webp": "image/webp",
 };
 
 function sendJson(response, statusCode, payload) {
@@ -68,7 +74,7 @@ function serveStatic(requestPath, response) {
   const filePath = path.join(ROOT, normalizedPath.replace(/^\/+/, ""));
   const extension = path.extname(filePath).toLowerCase();
 
-  if (![".html", ".css", ".js", ".md"].includes(extension)) {
+  if (!Object.prototype.hasOwnProperty.call(MIME_TYPES, extension)) {
     return false;
   }
 

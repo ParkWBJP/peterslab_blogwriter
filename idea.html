@@ -8,13 +8,18 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="hero-card hero-card-compact">
-      <div class="hero-copy compact">
-        <p class="hero-kicker">PetersLab</p>
-        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
-      </div>
-      <div class="hero-controls compact">
-        <div class="control-card">
+    <header class="app-header">
+      <a href="./index.html" class="brand-lockup" data-brand-home>
+        <img src="./peterslab_logo.png" alt="PetersLab" class="brand-logo">
+        <div class="brand-copy">
+          <span class="brand-eyebrow" data-i18n="homeEyebrow">PetersLab Editorial Tool</span>
+          <strong data-i18n="productName">Peter's Lab Blog Writer</strong>
+          <p data-i18n="productDescription">일본 반려동물 시장 흐름을 바탕으로 블로그 초안을 만들고 최종 검토까지 이어가는 단계형 워크플로우입니다.</p>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <div class="control-block">
           <span class="control-label" data-i18n="language">언어</span>
           <div class="segmented-control">
             <button type="button" class="segment is-active" data-lang-switch="ko">KO</button>
@@ -25,83 +30,94 @@
       </div>
     </header>
 
-    <nav class="step-nav compact">
-      <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-current" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>Current</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>Waiting</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>Waiting</small></span></button>
-      <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>Waiting</small></span></button>
-    </nav>
+    <div class="hint-row">
+      <p id="top-hint" class="top-hint"></p>
+      <nav class="step-nav">
+        <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-current" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>진행 중</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>대기</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>대기</small></span></button>
+        <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>대기</small></span></button>
+      </nav>
+    </div>
 
-    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+    <div id="status-banner" class="status-banner" data-i18n="ideaIntroBody"></div>
 
-    <main class="page-card page-stack">
-      <div class="panel-head compact">
-        <div>
-          <p class="panel-kicker">Step 3</p>
-          <h2 data-i18n="stepIdeaTitle">Idea Discovery</h2>
-        </div>
-        <button type="button" id="back-button" class="secondary-button">Back</button>
-      </div>
-
-      <section class="surface-card">
+    <main class="page-panel page-panel-stack">
+      <section class="section-card">
         <div class="section-head">
-          <h3 data-i18n="trendResultsHeading">Choose a Trend</h3>
-          <span class="micro-copy" data-i18n="chooseTrendHint">Pick one result to continue.</span>
+          <div>
+            <span class="panel-kicker">Step 3</span>
+            <h1 data-i18n="ideaIntroTitle">아이디어를 구체화하세요</h1>
+            <p data-i18n="ideaIntroBody">트렌드를 하나 고른 뒤 키워드와 제목 방향을 정하면 글 초안으로 바로 넘어갑니다.</p>
+          </div>
+          <button type="button" id="back-button" class="secondary-button" data-i18n="back">이전</button>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-head">
+          <div>
+            <h2 data-i18n="trendResultsHeading">추천 트렌드</h2>
+            <p class="section-subcopy" data-i18n="chooseTrendHint">지금 가장 자연스럽게 연결되는 출발점을 고르세요.</p>
+          </div>
         </div>
         <div id="trend-results" class="trend-grid"></div>
       </section>
 
-      <section class="surface-card">
-        <div class="section-head">
-          <h3 data-i18n="selectedTrendHeading">Selected Trend</h3>
-        </div>
-        <div id="selected-trend-card" class="selected-trend-card"></div>
-      </section>
+      <section class="idea-layout">
+        <article class="section-card">
+          <div class="section-head">
+            <div>
+              <h2 data-i18n="keywordSuggestions">추천 키워드</h2>
+            </div>
+            <button type="button" id="refresh-ideas-button" class="text-button" data-i18n="refreshIdeas">다시 추천</button>
+          </div>
 
-      <div id="idea-feedback" class="feedback-line is-hidden"></div>
+          <div id="selected-trend-card" class="selected-trend-card"></div>
+          <div id="idea-feedback" class="feedback-line is-hidden"></div>
+          <div id="keyword-suggestions" class="keyword-pills keyword-pills-wrap"></div>
 
-      <section class="surface-card">
-        <div class="section-head">
-          <h3 data-i18n="keywordSuggestions">Keyword Suggestions</h3>
-          <button type="button" id="refresh-ideas-button" class="text-button">Refresh</button>
-        </div>
-        <div id="keyword-suggestions" class="keyword-list"></div>
-        <div class="inline-input-row compact">
-          <label class="field field-grow">
-            <span class="field-label">Custom Keyword</span>
-            <input id="custom-keyword-input" type="text">
-          </label>
-          <button type="button" id="add-keyword-button" class="secondary-button">Add</button>
-        </div>
-      </section>
+          <div class="inline-form">
+            <label class="field field-grow">
+              <span class="field-label" data-i18n="customKeyword">직접 키워드 입력</span>
+              <input id="custom-keyword-input" type="text" data-i18n-placeholder="customKeyword">
+            </label>
+            <button type="button" id="add-keyword-button" class="secondary-button" data-i18n="addKeyword">추가</button>
+          </div>
+        </article>
 
-      <section class="surface-card">
-        <div class="section-head">
-          <h3 data-i18n="titleSuggestions">Title Suggestions</h3>
-          <span id="selected-keyword-note" class="micro-copy">-</span>
-        </div>
-        <div id="title-suggestions" class="title-list"></div>
-        <div class="field-stack compact">
-          <label class="field">
-            <span class="field-label" data-i18n="selectedTitle">Final Title</span>
-            <input id="selected-title-input" type="text">
-          </label>
-          <div class="field">
-            <span class="field-label" data-i18n="blogDirection">Direction</span>
-            <div class="segmented-control">
-              <button type="button" class="segment is-active" data-direction="empathy" data-i18n="directionEmpathy">Empathy</button>
-              <button type="button" class="segment" data-direction="informative" data-i18n="directionInformative">Informative</button>
-              <button type="button" class="segment" data-direction="seasonal" data-i18n="directionSeasonal">Seasonal</button>
-              <button type="button" class="segment" data-direction="anniversary" data-i18n="directionAnniversary">Anniversary</button>
-              <button type="button" class="segment" data-direction="guardian" data-i18n="directionGuardian">Guardian</button>
+        <article class="section-card">
+          <div class="section-head">
+            <div>
+              <h2 data-i18n="titleSuggestions">제목 제안</h2>
+              <p id="selected-keyword-note" class="section-subcopy">-</p>
             </div>
           </div>
-        </div>
-        <div class="step-footer compact">
-          <button type="button" id="start-writing-button" class="primary-button">Start Writing</button>
-        </div>
+
+          <div id="title-suggestions" class="title-list"></div>
+
+          <label class="field">
+            <span class="field-label" data-i18n="selectedTitle">최종 제목</span>
+            <input id="selected-title-input" type="text">
+          </label>
+
+          <div class="field">
+            <span class="field-label" data-i18n="blogDirection">글 방향</span>
+            <div class="segmented-control direction-control">
+              <button type="button" class="segment is-active" data-direction="empathy" data-i18n="directionEmpathy">공감형</button>
+              <button type="button" class="segment" data-direction="informative" data-i18n="directionInformative">정보형</button>
+              <button type="button" class="segment" data-direction="seasonal" data-i18n="directionSeasonal">계절형</button>
+              <button type="button" class="segment" data-direction="anniversary" data-i18n="directionAnniversary">기념일형</button>
+              <button type="button" class="segment" data-direction="guardian" data-i18n="directionGuardian">보호자 경험형</button>
+            </div>
+          </div>
+
+          <div class="section-footer">
+            <button type="button" id="start-writing-button" class="primary-button" data-i18n="startWriting">블로그 작성 시작</button>
+          </div>
+        </article>
       </section>
     </main>
   </div>

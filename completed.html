@@ -8,51 +8,93 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="hero-card hero-card-compact">
-      <div class="hero-copy compact">
-        <p class="hero-kicker">PetersLab</p>
-        <h1 data-i18n="productName">Peter's Lab Blog Writer</h1>
+    <header class="app-header">
+      <a href="./index.html" class="brand-lockup" data-brand-home>
+        <img src="./peterslab_logo.png" alt="PetersLab" class="brand-logo">
+        <div class="brand-copy">
+          <span class="brand-eyebrow" data-i18n="homeEyebrow">PetersLab Editorial Tool</span>
+          <strong data-i18n="productName">Peter's Lab Blog Writer</strong>
+          <p data-i18n="productDescription">일본 반려동물 시장 흐름을 바탕으로 블로그 초안을 만들고 최종 검토까지 이어가는 단계형 워크플로우입니다.</p>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <div class="control-block">
+          <span class="control-label" data-i18n="language">언어</span>
+          <div class="segmented-control">
+            <button type="button" class="segment is-active" data-lang-switch="ko">KO</button>
+            <button type="button" class="segment" data-lang-switch="en">EN</button>
+            <button type="button" class="segment" data-lang-switch="ja">JA</button>
+          </div>
+        </div>
+        <div class="control-block control-block-status">
+          <span class="control-label" data-i18n="connectionStatus">연결 상태</span>
+          <div class="status-row">
+            <span id="openai-status" class="status-chip neutral">OpenAI</span>
+            <span id="notion-status" class="status-chip neutral">Notion</span>
+          </div>
+        </div>
       </div>
     </header>
 
-    <nav class="step-nav compact">
-      <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-complete" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>Done</small></span></button>
-      <button type="button" class="step-chip is-current" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>Current</small></span></button>
-    </nav>
+    <div class="hint-row">
+      <p id="top-hint" class="top-hint"></p>
+      <nav class="step-nav">
+        <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>완료</small></span></button>
+        <button type="button" class="step-chip is-current" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>진행 중</small></span></button>
+      </nav>
+    </div>
 
-    <div id="status-banner" class="status-banner" data-i18n="heroGuide"></div>
+    <div id="status-banner" class="status-banner" data-i18n="completedBody"></div>
 
-    <main class="page-card">
-      <div class="panel-head compact">
-        <div>
-          <p class="panel-kicker">Step 6</p>
-          <h2 data-i18n="stepCompletedTitle">Completed</h2>
+    <main class="page-panel">
+      <section class="complete-card">
+        <div class="section-head">
+          <div>
+            <span class="panel-kicker">Step 6</span>
+            <h1 data-i18n="completedTitle">작업이 완료되었습니다</h1>
+            <p data-i18n="completedBody">최종 문서를 복사하거나 Notion 업로드를 준비할 수 있습니다.</p>
+          </div>
+          <span id="upload-status-chip" class="surface-chip neutral">Ready</span>
         </div>
-      </div>
 
-      <article class="completion-card">
-        <div class="completion-header">
-          <h3 id="completed-title">-</h3>
-          <span id="upload-status-chip" class="surface-chip">Ready</span>
+        <div class="complete-metrics">
+          <div class="metric-card">
+            <span data-i18n="fieldTitle">제목</span>
+            <strong id="completed-title">-</strong>
+          </div>
+          <div class="metric-card">
+            <span data-i18n="completedTimeLabel">완료 시간</span>
+            <strong id="completed-time">-</strong>
+          </div>
+          <div class="metric-card">
+            <span data-i18n="completedUploadLabel">업로드 상태</span>
+            <strong id="completed-upload-status">-</strong>
+          </div>
+          <div class="metric-card">
+            <span data-i18n="completedLanguageLabel">사용 언어</span>
+            <strong id="completed-language">-</strong>
+          </div>
         </div>
-        <div class="completion-grid compact">
-          <div class="completion-item"><span data-i18n="completedTimeLabel">Completed At</span><strong id="completed-time">-</strong></div>
-          <div class="completion-item"><span data-i18n="completedUploadLabel">Upload Status</span><strong id="completed-upload-status">-</strong></div>
-          <div class="completion-item"><span data-i18n="completedLanguageLabel">Language</span><strong id="completed-language">-</strong></div>
+
+        <div class="complete-summary">
+          <h2 data-i18n="reviewSummaryLabel">검토 요약</h2>
+          <p id="completed-summary">-</p>
         </div>
-        <p id="completed-summary" class="completion-summary">-</p>
-        <div class="completion-actions">
-          <button type="button" id="upload-notion-button" class="primary-button" data-i18n="notionUpload">Upload to Notion</button>
-          <button type="button" id="copy-final-button" class="secondary-button" data-i18n="copyAll">Copy</button>
-          <button type="button" id="back-to-review-button" class="secondary-button" data-i18n="backToReview">Back</button>
-          <button type="button" id="new-article-button" class="secondary-button" data-i18n="newArticle">New</button>
+
+        <div class="complete-actions">
+          <button type="button" id="upload-notion-button" class="primary-button" data-i18n="notionUpload">Notion 업로드</button>
+          <button type="button" id="copy-final-button" class="secondary-button" data-i18n="copyAll">전체 글 복사</button>
+          <button type="button" id="back-to-review-button" class="secondary-button" data-i18n="backToReview">검토 화면으로 돌아가기</button>
+          <button type="button" id="new-article-button" class="secondary-button" data-i18n="newArticle">새 글 만들기</button>
         </div>
-        <a id="notion-link" class="text-link is-hidden" href="#" target="_blank" rel="noreferrer noopener">Open in Notion</a>
-      </article>
+
+        <a id="notion-link" class="text-link is-hidden" href="#" target="_blank" rel="noreferrer noopener" data-i18n="openInNotion">Notion에서 보기</a>
+      </section>
     </main>
   </div>
 

@@ -1,8 +1,9 @@
 (async () => {
   const state = PLBW.loadState();
   await PLBW.refreshHealth(state);
+
   if (!state.trendPayload?.trends?.length) {
-    PLBW.go("./index.html");
+    PLBW.goPhase("trend");
     return;
   }
 
@@ -20,93 +21,156 @@
   const startWritingButton = document.getElementById("start-writing-button");
   const directionButtons = Array.from(document.querySelectorAll("[data-direction]"));
 
-  function trendText(trend, field) {
-    return trend?.[`${field}${{ ko: "Ko", en: "En", ja: "Ja" }[state.language]}`] || trend?.[`${field}Ja`] || "";
+  function fieldByLanguage(prefix) {
+    return `${prefix}${state.language === "ko" ? "Ko" : state.language === "en" ? "En" : "Ja"}`;
+  }
+
+  function trendText(trend, prefix) {
+    return trend?.[fieldByLanguage(prefix)] || trend?.[`${prefix}Ja`] || "";
+  }
+
+  function selectedTitle() {
+    return PLBW.getText(state.selectedTitleMap, state.language);
+  }
+
+  function renderFeedback() {
+    feedback.classList.toggle("is-hidden", !state._ideaMessage);
+    feedback.classList.toggle("is-error", state._ideaTone === "error");
+    feedback.textContent = state._ideaMessage || "";
+  }
+
+  function renderTrends() {
+    trendResults.innerHTML = state.trendPayload.trends.map((trend, index) => `
+      <article class="trend-card ${state.selectedTrendIndex === index ? "is-active" : ""}">
+        <div class="trend-card-head">
+          <div>
+            <h3>${trendText(trend, "title")}</h3>
+            <p>${trendText(trend, "summary")}</p>
+          </div>
+          <span class="priority-badge priority-${String(trend.priority || "Medium").toLowerCase()}">${trend.priority || "Medium"}</span>
+        </div>
+        <div class="trend-card-body">
+          <p><strong>${trendText(trend, "whyNow")}</strong></p>
+          <p>${trendText(trend, "petersPoint")}</p>
+        </div>
+        <button type="button" class="secondary-button" data-select-trend="${index}">${PLBW.t(state, "useThisTrend")}</button>
+      </article>
+    `).join("");
+  }
+
+  function renderSelectedTrend() {
+    const trend = state.trendPayload.trends[state.selectedTrendIndex];
+    if (!trend) {
+      selectedTrendCard.innerHTML = `<p>${PLBW.t(state, "pickTrendFirst")}</p>`;
+      return;
+    }
+
+    selectedTrendCard.innerHTML = `
+      <span class="mini-kicker">${PLBW.t(state, "selectedTrendHeading")}</span>
+      <h3>${trendText(trend, "title")}</h3>
+      <p>${trendText(trend, "summary")}</p>
+      <dl class="detail-list">
+        <div><dt>${PLBW.t(state, "summaryTrend")}</dt><dd>${trendText(trend, "whyNow")}</dd></div>
+        <div><dt>PetersLab</dt><dd>${trendText(trend, "petersPoint")}</dd></div>
+      </dl>
+    `;
+  }
+
+  function renderKeywords() {
+    if (!state.ideaPayload?.keywords?.length) {
+      keywordSuggestions.innerHTML = `<p class="empty-copy">${PLBW.t(state, "pickTrendFirst")}</p>`;
+      return;
+    }
+
+    keywordSuggestions.innerHTML = state.ideaPayload.keywords.map((item) => `
+      <button type="button" class="keyword-pill ${item.value === state.selectedKeyword ? "is-active" : ""}" data-keyword="${item.value}">
+        ${item.value}
+      </button>
+    `).join("");
+  }
+
+  function renderTitles() {
+    selectedKeywordNote.textContent = state.selectedKeyword || "-";
+
+    if (!state.ideaPayload?.titleSuggestions?.length) {
+      titleSuggestions.innerHTML = `<p class="empty-copy">${PLBW.t(state, "ideaPreparing")}</p>`;
+      return;
+    }
+
+    titleSuggestions.innerHTML = state.ideaPayload.titleSuggestions.map((item, index) => {
+      const title = PLBW.getText({ ko: item.titleKo, en: item.titleEn, ja: item.titleJa }, state.language);
+      const angle = PLBW.getText({ ko: item.angleKo, en: item.angleEn, ja: item.angleJa }, state.language);
+      return `
+        <button type="button" class="title-card ${title === selectedTitle() ? "is-active" : ""}" data-title-index="${index}">
+          <strong>${title}</strong>
+          <span>${angle}</span>
+        </button>
+      `;
+    }).join("");
+  }
+
+  function renderDirections() {
+    directionButtons.forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.direction === state.direction);
+    });
   }
 
   function render() {
     PLBW.renderFrame(state, "idea");
-    backButton.textContent = { ko: "이전", en: "Back", ja: "戻る" }[state.language];
-    refreshIdeasButton.textContent = { ko: "다시 제안받기", en: "Refresh Ideas", ja: "再提案" }[state.language];
-    addKeywordButton.textContent = { ko: "키워드 추가", en: "Add Keyword", ja: "キーワード追加" }[state.language];
-    startWritingButton.textContent = { ko: "블로그 작성 시작", en: "Start Writing", ja: "ブログ作成開始" }[state.language];
-    customKeywordInput.placeholder = { ko: "직접 입력", en: "Type your own keyword", ja: "直接入力" }[state.language];
-
-    directionButtons.forEach((button) => {
-      button.classList.toggle("is-active", button.dataset.direction === state.direction);
-    });
-
-    trendResults.innerHTML = state.trendPayload.trends.map((trend, index) => `
-      <article class="trend-card ${state.selectedTrendIndex === index ? "is-active" : ""}">
-        <div class="trend-card-head">
-          <h4>${trendText(trend, "title")}</h4>
-          <span class="text-chip">${trend.priority || "Medium"}</span>
-        </div>
-        <p>${trendText(trend, "summary")}</p>
-        <button type="button" class="secondary-button" data-select-trend="${index}">
-          ${state.language === "ko" ? "이 트렌드로 진행" : state.language === "ja" ? "このトレンドで進む" : "Use This Trend"}
-        </button>
-      </article>
-    `).join("");
-
-    const trend = state.trendPayload.trends[state.selectedTrendIndex];
-    selectedTrendCard.innerHTML = trend ? `
-      <p><strong>${trendText(trend, "title")}</strong></p>
-      <p>${trendText(trend, "summary")}</p>
-      <p>${trendText(trend, "petersPoint")}</p>
-    ` : (state.language === "ko" ? "먼저 트렌드를 하나 선택해 주세요." : state.language === "ja" ? "先にトレンドを一つ選んでください。" : "Select a trend first.");
-
-    feedback.classList.toggle("is-hidden", !state._ideaMessage);
-    feedback.classList.toggle("is-error", state._ideaTone === "error");
-    feedback.textContent = state._ideaMessage || "";
-
-    if (!state.ideaPayload?.keywords?.length) {
-      keywordSuggestions.innerHTML = state.language === "ko" ? "키워드 제안은 트렌드 선택 후 표시됩니다." : state.language === "ja" ? "キーワード提案はトレンド選択後に表示されます。" : "Keyword suggestions appear after trend selection.";
-    } else {
-      keywordSuggestions.innerHTML = `
-        <div class="keyword-pills">
-          ${state.ideaPayload.keywords.map((item) => `<button type="button" class="keyword-pill ${item.value === state.selectedKeyword ? "is-active" : ""}" data-keyword="${item.value}">${item.value}</button>`).join("")}
-        </div>
-      `;
-    }
-
-    selectedKeywordNote.textContent = state.selectedKeyword || "-";
-    if (!state.ideaPayload?.titleSuggestions?.length) {
-      titleSuggestions.innerHTML = state.language === "ko" ? "키워드를 선택하면 제목 예시가 표시됩니다." : state.language === "ja" ? "キーワードを選ぶとタイトル例が表示されます。" : "Title suggestions appear after you choose a keyword.";
-    } else {
-      titleSuggestions.innerHTML = state.ideaPayload.titleSuggestions.map((item, index) => {
-        const title = PLBW.getText({ ko: item.titleKo, en: item.titleEn, ja: item.titleJa }, state.language);
-        const angle = PLBW.getText({ ko: item.angleKo, en: item.angleEn, ja: item.angleJa }, state.language);
-        return `<button type="button" class="title-card ${title === PLBW.getText(state.selectedTitleMap, state.language) ? "is-active" : ""}" data-title-index="${index}"><h4>${title}</h4><p>${angle}</p></button>`;
-      }).join("");
-    }
-    selectedTitleInput.value = PLBW.getText(state.selectedTitleMap, state.language);
+    renderTrends();
+    renderSelectedTrend();
+    renderKeywords();
+    renderTitles();
+    renderDirections();
+    renderFeedback();
+    selectedTitleInput.value = selectedTitle();
   }
 
   async function loadIdeas(selectedKeyword = "") {
     const trend = state.trendPayload.trends[state.selectedTrendIndex];
-    if (!trend) return;
-    state._ideaMessage = state.language === "ko" ? "키워드와 제목을 정리하고 있습니다." : state.language === "ja" ? "キーワードとタイトルを整理しています。" : "Preparing keywords and titles.";
+    if (!trend) {
+      state._ideaMessage = PLBW.t(state, "pickTrendFirst");
+      state._ideaTone = "error";
+      render();
+      return;
+    }
+
+    state._ideaMessage = PLBW.t(state, "ideaPreparing");
     state._ideaTone = "neutral";
     render();
+
     try {
-      const payload = await PLBW.postJSON("/api/ideas", { trend, selectedKeyword, outputLanguage: state.language });
+      const payload = await PLBW.postJSON("/api/ideas", {
+        trend,
+        selectedKeyword,
+        outputLanguage: state.language,
+      });
+
       state.ideaPayload = payload;
       state.selectedKeyword = selectedKeyword || payload.keywords?.[0]?.value || "";
+
       const firstTitle = payload.titleSuggestions?.[0];
-      state.selectedTitleMap = firstTitle ? { ko: firstTitle.titleKo || "", en: firstTitle.titleEn || "", ja: firstTitle.titleJa || "" } : { ko: "", en: "", ja: "" };
-      state._ideaMessage = state.language === "ko" ? "키워드와 제목 제안이 준비되었습니다." : state.language === "ja" ? "キーワードとタイトル提案の準備ができました。" : "Keyword and title suggestions are ready.";
+      if (firstTitle) {
+        state.selectedTitleMap = {
+          ko: firstTitle.titleKo || "",
+          en: firstTitle.titleEn || "",
+          ja: firstTitle.titleJa || "",
+        };
+      }
+
+      state._ideaMessage = PLBW.t(state, "ideaReady");
       state._ideaTone = "neutral";
       PLBW.saveState(state);
       render();
     } catch (error) {
-      state._ideaMessage = error.message;
+      state._ideaMessage = error.message || PLBW.t(state, "fetchErrorBody");
       state._ideaTone = "error";
+      PLBW.saveState(state);
       render();
     }
   }
 
-  backButton.addEventListener("click", () => PLBW.go("./index.html"));
+  backButton.addEventListener("click", () => PLBW.goPhase("trend"));
   refreshIdeasButton.addEventListener("click", () => loadIdeas(state.selectedKeyword));
   addKeywordButton.addEventListener("click", () => {
     const value = customKeywordInput.value.trim();
@@ -120,19 +184,16 @@
     PLBW.saveState(state);
   });
   startWritingButton.addEventListener("click", () => {
-    if (state.selectedTrendIndex < 0 || !state.selectedKeyword || !PLBW.getText(state.selectedTitleMap, state.language)) {
-      state._ideaMessage = state.language === "ko"
-        ? "트렌드, 키워드, 제목을 먼저 정해 주세요."
-        : state.language === "ja"
-          ? "トレンド、キーワード、タイトルを先に決めてください。"
-          : "Choose the trend, keyword, and title first.";
+    if (state.selectedTrendIndex < 0 || !state.selectedKeyword || !selectedTitle().trim()) {
+      state._ideaMessage = PLBW.t(state, "writingNeedSelections");
       state._ideaTone = "error";
       render();
       return;
     }
-    PLBW.saveState(state);
-    PLBW.go("./writing.html");
+    PLBW.setBanner(state, "writingLoadingLead", "neutral");
+    PLBW.goPhase("writingLoading");
   });
+
   trendResults.addEventListener("click", (event) => {
     const button = event.target.closest("[data-select-trend]");
     if (!button) return;
@@ -144,6 +205,7 @@
     render();
     loadIdeas("");
   });
+
   keywordSuggestions.addEventListener("click", (event) => {
     const button = event.target.closest("[data-keyword]");
     if (!button) return;
@@ -151,20 +213,35 @@
     PLBW.saveState(state);
     loadIdeas(button.dataset.keyword);
   });
+
   titleSuggestions.addEventListener("click", (event) => {
     const button = event.target.closest("[data-title-index]");
     if (!button) return;
-    const item = state.ideaPayload.titleSuggestions[Number(button.dataset.titleIndex)];
-    state.selectedTitleMap = { ko: item.titleKo || "", en: item.titleEn || "", ja: item.titleJa || "" };
+    const item = state.ideaPayload?.titleSuggestions?.[Number(button.dataset.titleIndex)];
+    if (!item) return;
+    state.selectedTitleMap = {
+      ko: item.titleKo || "",
+      en: item.titleEn || "",
+      ja: item.titleJa || "",
+    };
     PLBW.saveState(state);
     render();
   });
-  directionButtons.forEach((button) => button.addEventListener("click", () => {
-    state.direction = button.dataset.direction;
-    PLBW.saveState(state);
-    render();
-  }));
+
+  directionButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.direction = button.dataset.direction;
+      PLBW.saveState(state);
+      render();
+    });
+  });
 
   window.addEventListener("plbw-language-change", render);
-  render();
+
+  if (state.selectedTrendIndex >= 0 && !state.ideaPayload) {
+    render();
+    loadIdeas("");
+  } else {
+    render();
+  }
 })();
