@@ -160,13 +160,17 @@
 
     try {
       const payload = await PLBW.postJSON("/api/ideas", {
-        trend,
+        trend: {
+          title: trendText(trend, "title"),
+          summary: trendText(trend, "summary"),
+          petersPoint: trendText(trend, "petersPoint"),
+        },
         selectedKeyword: "",
         outputLanguage: state.language,
       });
 
       state.ideaPayload = payload;
-      state.selectedKeyword = payload.keywords?.[0]?.value || trendText(trend, "title");
+      state.selectedKeyword = trendText(trend, "title");
 
       const firstTitle = payload.titleSuggestions?.[0];
       if (firstTitle) {

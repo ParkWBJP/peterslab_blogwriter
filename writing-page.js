@@ -90,17 +90,24 @@
     try {
       const payload = await PLBW.postJSON("/api/draft", {
         selection: {
-          trendTitleJa: trend.titleJa || "",
-          trendTitleKo: trend.titleKo || "",
-          trendTitleEn: trend.titleEn || "",
-          trendSummaryJa: trend.summaryJa || "",
-          trendSummaryEn: trend.summaryEn || "",
-          keyword: state.selectedKeyword || trend.titleJa || trend.titleKo || trend.titleEn || "",
+          trendTitle: PLBW.getText({
+            ko: trend.titleKo || "",
+            en: trend.titleEn || "",
+            ja: trend.titleJa || "",
+          }, state.language),
+          trendSummary: PLBW.getText({
+            ko: trend.summaryKo || "",
+            en: trend.summaryEn || "",
+            ja: trend.summaryJa || "",
+          }, state.language),
+          keyword: state.selectedKeyword || PLBW.getText({
+            ko: trend.titleKo || "",
+            en: trend.titleEn || "",
+            ja: trend.titleJa || "",
+          }, state.language),
           direction: state.direction,
           emojiMode: state.emojiMode || "none",
-          titleJa: selectedTitle.ja || "",
-          titleKo: selectedTitle.ko || "",
-          titleEn: selectedTitle.en || "",
+          selectedTitle: PLBW.getText(selectedTitle, state.language),
           outputLanguage: state.language,
         },
       });
