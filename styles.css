@@ -738,10 +738,60 @@ textarea {
   margin: 14px 0;
 }
 
+.title-loading-card {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(22, 189, 232, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 251, 254, 0.92));
+  box-shadow: var(--shadow-sm);
+}
+
+.loading-pill-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.loading-pill,
+.loading-line {
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(22, 189, 232, 0.1), rgba(11, 111, 143, 0.22), rgba(22, 189, 232, 0.1));
+  background-size: 220px 100%;
+  animation: shimmer 1.7s linear infinite;
+}
+
+.loading-pill {
+  width: 86px;
+  height: 26px;
+}
+
+.loading-pill-short {
+  width: 58px;
+}
+
+.loading-line {
+  height: 12px;
+  margin-top: 12px;
+}
+
+.loading-line-long {
+  width: 90%;
+}
+
+.loading-line-mid {
+  width: 68%;
+}
+
+.loading-line-short {
+  width: 44%;
+}
+
 .title-card {
   display: grid;
   gap: 6px;
   text-align: left;
+  position: relative;
 }
 
 .title-card strong {
@@ -753,6 +803,29 @@ textarea {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.5;
+}
+
+.title-card.is-active {
+  border-color: rgba(22, 189, 232, 0.38);
+  background: linear-gradient(180deg, rgba(237, 250, 254, 0.98), rgba(224, 246, 252, 0.96));
+  box-shadow: 0 20px 38px rgba(11, 111, 143, 0.16);
+}
+
+.title-selected-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brand), #0a9bc3);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 .direction-control {

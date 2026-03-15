@@ -55,6 +55,18 @@
     startMessageRotation();
   }
 
+  function localizeDraftError(error) {
+    if (!error?.message) {
+      return PLBW.t(state, "fetchErrorBody");
+    }
+
+    if (error.message === "DRAFT_MIN_LENGTH_NOT_MET") {
+      return PLBW.t(state, "draftLengthFailure");
+    }
+
+    return error.message;
+  }
+
   async function createDraft() {
     if (requestStarted) return;
     requestStarted = true;
@@ -71,8 +83,9 @@
           trendTitleEn: trend.titleEn || "",
           trendSummaryJa: trend.summaryJa || "",
           trendSummaryEn: trend.summaryEn || "",
-          keyword: state.selectedKeyword,
+          keyword: state.selectedKeyword || trend.titleJa || trend.titleKo || trend.titleEn || "",
           direction: state.direction,
+          emojiMode: state.emojiMode || "none",
           titleJa: selectedTitle.ja || "",
           titleKo: selectedTitle.ko || "",
           titleEn: selectedTitle.en || "",
@@ -89,7 +102,7 @@
       requestStarted = false;
       PLBW.setBanner(state, "fetchErrorBody", "error");
       PLBW.renderFrame(state, "writingLoading");
-      PLBW.setErrorMessage(errorCard, PLBW.t(state, "fetchErrorTitle"), error.message || PLBW.t(state, "fetchErrorBody"));
+      PLBW.setErrorMessage(errorCard, PLBW.t(state, "fetchErrorTitle"), localizeDraftError(error));
     }
   }
 

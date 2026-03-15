@@ -12,14 +12,12 @@
   const selectedTrendCard = document.getElementById("selected-trend-card");
   const feedback = document.getElementById("idea-feedback");
   const refreshIdeasButton = document.getElementById("refresh-ideas-button");
-  const keywordSuggestions = document.getElementById("keyword-suggestions");
-  const customKeywordInput = document.getElementById("custom-keyword-input");
-  const addKeywordButton = document.getElementById("add-keyword-button");
   const titleSuggestions = document.getElementById("title-suggestions");
   const selectedKeywordNote = document.getElementById("selected-keyword-note");
   const selectedTitleInput = document.getElementById("selected-title-input");
   const startWritingButton = document.getElementById("start-writing-button");
   const directionButtons = Array.from(document.querySelectorAll("[data-direction]"));
+  const emojiModeButtons = Array.from(document.querySelectorAll("[data-emoji-mode]"));
 
   function fieldByLanguage(prefix) {
     return `${prefix}${state.language === "ko" ? "Ko" : state.language === "en" ? "En" : "Ja"}`;
@@ -76,21 +74,32 @@
     `;
   }
 
-  function renderKeywords() {
-    if (!state.ideaPayload?.keywords?.length) {
-      keywordSuggestions.innerHTML = `<p class="empty-copy">${PLBW.t(state, "pickTrendFirst")}</p>`;
+  function renderTitles() {
+    selectedKeywordNote.textContent = PLBW.t(state, "titlePickGuide");
+
+    if (state._ideasLoading) {
+      titleSuggestions.innerHTML = `
+        <div class="title-loading-card">
+          <div class="loading-pill-row">
+            <span class="loading-pill"></span>
+            <span class="loading-pill loading-pill-short"></span>
+          </div>
+          <div class="loading-line loading-line-long"></div>
+          <div class="loading-line loading-line-mid"></div>
+          <div class="loading-line loading-line-long"></div>
+        </div>
+        <div class="title-loading-card">
+          <div class="loading-pill-row">
+            <span class="loading-pill"></span>
+            <span class="loading-pill loading-pill-short"></span>
+          </div>
+          <div class="loading-line loading-line-mid"></div>
+          <div class="loading-line loading-line-long"></div>
+          <div class="loading-line loading-line-short"></div>
+        </div>
+      `;
       return;
     }
-
-    keywordSuggestions.innerHTML = state.ideaPayload.keywords.map((item) => `
-      <button type="button" class="keyword-pill ${item.value === state.selectedKeyword ? "is-active" : ""}" data-keyword="${item.value}">
-        ${item.value}
-      </button>
-    `).join("");
-  }
-
-  function renderTitles() {
-    selectedKeywordNote.textContent = state.selectedKeyword || "-";
 
     if (!state.ideaPayload?.titleSuggestions?.length) {
       titleSuggestions.innerHTML = `<p class="empty-copy">${PLBW.t(state, "ideaPreparing")}</p>`;
@@ -100,8 +109,10 @@
     titleSuggestions.innerHTML = state.ideaPayload.titleSuggestions.map((item, index) => {
       const title = PLBW.getText({ ko: item.titleKo, en: item.titleEn, ja: item.titleJa }, state.language);
       const angle = PLBW.getText({ ko: item.angleKo, en: item.angleEn, ja: item.angleJa }, state.language);
+      const isActive = title === selectedTitle();
       return `
-        <button type="button" class="title-card ${title === selectedTitle() ? "is-active" : ""}" data-title-index="${index}">
+        <button type="button" class="title-card ${isActive ? "is-active" : ""}" data-title-index="${index}">
+          ${isActive ? `<span class="title-selected-badge">${PLBW.t(state, "titleChosenLabel")}</span>` : ""}
           <strong>${title}</strong>
           <span>${angle}</span>
         </button>
@@ -115,18 +126,25 @@
     });
   }
 
+  function renderEmojiMode() {
+    emojiModeButtons.forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.emojiMode === state.emojiMode);
+    });
+  }
+
   function render() {
+    state._ideasLoading = Boolean(state._ideasLoading);
     PLBW.renderFrame(state, "idea");
     renderTrends();
     renderSelectedTrend();
-    renderKeywords();
     renderTitles();
     renderDirections();
+    renderEmojiMode();
     renderFeedback();
     selectedTitleInput.value = selectedTitle();
   }
 
-  async function loadIdeas(selectedKeyword = "") {
+  async function loadIdeas() {
     const trend = state.trendPayload.trends[state.selectedTrendIndex];
     if (!trend) {
       state._ideaMessage = PLBW.t(state, "pickTrendFirst");
@@ -137,17 +155,18 @@
 
     state._ideaMessage = PLBW.t(state, "ideaPreparing");
     state._ideaTone = "neutral";
+    state._ideasLoading = true;
     render();
 
     try {
       const payload = await PLBW.postJSON("/api/ideas", {
         trend,
-        selectedKeyword,
+        selectedKeyword: "",
         outputLanguage: state.language,
       });
 
       state.ideaPayload = payload;
-      state.selectedKeyword = selectedKeyword || payload.keywords?.[0]?.value || "";
+      state.selectedKeyword = payload.keywords?.[0]?.value || trendText(trend, "title");
 
       const firstTitle = payload.titleSuggestions?.[0];
       if (firstTitle) {
@@ -160,31 +179,26 @@
 
       state._ideaMessage = PLBW.t(state, "ideaReady");
       state._ideaTone = "neutral";
+      state._ideasLoading = false;
       PLBW.saveState(state);
       render();
     } catch (error) {
       state._ideaMessage = error.message || PLBW.t(state, "fetchErrorBody");
       state._ideaTone = "error";
+      state._ideasLoading = false;
       PLBW.saveState(state);
       render();
     }
   }
 
   backButton.addEventListener("click", () => PLBW.goPhase("trend"));
-  refreshIdeasButton.addEventListener("click", () => loadIdeas(state.selectedKeyword));
-  addKeywordButton.addEventListener("click", () => {
-    const value = customKeywordInput.value.trim();
-    if (!value) return;
-    state.selectedKeyword = value;
-    customKeywordInput.value = "";
-    loadIdeas(value);
-  });
+  refreshIdeasButton.addEventListener("click", () => loadIdeas());
   selectedTitleInput.addEventListener("input", (event) => {
     state.selectedTitleMap[state.language] = event.target.value;
     PLBW.saveState(state);
   });
   startWritingButton.addEventListener("click", () => {
-    if (state.selectedTrendIndex < 0 || !state.selectedKeyword || !selectedTitle().trim()) {
+    if (state.selectedTrendIndex < 0 || !selectedTitle().trim()) {
       state._ideaMessage = PLBW.t(state, "writingNeedSelections");
       state._ideaTone = "error";
       render();
@@ -201,17 +215,10 @@
     state.ideaPayload = null;
     state.selectedKeyword = "";
     state.selectedTitleMap = { ko: "", en: "", ja: "" };
+    state._ideasLoading = true;
     PLBW.saveState(state);
     render();
-    loadIdeas("");
-  });
-
-  keywordSuggestions.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-keyword]");
-    if (!button) return;
-    state.selectedKeyword = button.dataset.keyword;
-    PLBW.saveState(state);
-    loadIdeas(button.dataset.keyword);
+    loadIdeas();
   });
 
   titleSuggestions.addEventListener("click", (event) => {
@@ -236,11 +243,20 @@
     });
   });
 
+  emojiModeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.emojiMode = button.dataset.emojiMode;
+      PLBW.saveState(state);
+      render();
+    });
+  });
+
   window.addEventListener("plbw-language-change", render);
 
   if (state.selectedTrendIndex >= 0 && !state.ideaPayload) {
+    state._ideasLoading = true;
     render();
-    loadIdeas("");
+    loadIdeas();
   } else {
     render();
   }

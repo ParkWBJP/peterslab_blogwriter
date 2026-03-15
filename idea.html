@@ -33,12 +33,48 @@
     <div class="hint-row">
       <p id="top-hint" class="top-hint"></p>
       <nav class="step-nav">
-        <button type="button" class="step-chip is-complete" data-phase-nav="trend"><span class="step-index">01</span><span class="step-meta"><strong data-i18n="stepTrendTitle">Trend Scan</strong><small data-step-state>완료</small></span></button>
-        <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading"><span class="step-index">02</span><span class="step-meta"><strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong><small data-step-state>완료</small></span></button>
-        <button type="button" class="step-chip is-current" data-phase-nav="idea"><span class="step-index">03</span><span class="step-meta"><strong data-i18n="stepIdeaTitle">Idea Discovery</strong><small data-step-state>진행 중</small></span></button>
-        <button type="button" class="step-chip" data-phase-nav="writingLoading"><span class="step-index">04</span><span class="step-meta"><strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong><small data-step-state>대기</small></span></button>
-        <button type="button" class="step-chip" data-phase-nav="review"><span class="step-index">05</span><span class="step-meta"><strong data-i18n="stepReviewTitle">Review &amp; Edit</strong><small data-step-state>대기</small></span></button>
-        <button type="button" class="step-chip" data-phase-nav="completed"><span class="step-index">06</span><span class="step-meta"><strong data-i18n="stepCompletedTitle">Completed</strong><small data-step-state>대기</small></span></button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="trend">
+          <span class="step-index">01</span>
+          <span class="step-meta">
+            <strong data-i18n="stepTrendTitle">Trend Scan</strong>
+            <small data-step-state>완료</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip is-complete" data-phase-nav="trendLoading">
+          <span class="step-index">02</span>
+          <span class="step-meta">
+            <strong data-i18n="stepTrendLoadingTitle">Trend Loading</strong>
+            <small data-step-state>완료</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip is-current" data-phase-nav="idea">
+          <span class="step-index">03</span>
+          <span class="step-meta">
+            <strong data-i18n="stepIdeaTitle">Idea Discovery</strong>
+            <small data-step-state>진행 중</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="writingLoading">
+          <span class="step-index">04</span>
+          <span class="step-meta">
+            <strong data-i18n="stepWritingLoadingTitle">Blog Writing</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="review">
+          <span class="step-index">05</span>
+          <span class="step-meta">
+            <strong data-i18n="stepReviewTitle">Review &amp; Edit</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
+        <button type="button" class="step-chip" data-phase-nav="completed">
+          <span class="step-index">06</span>
+          <span class="step-meta">
+            <strong data-i18n="stepCompletedTitle">Completed</strong>
+            <small data-step-state>대기</small>
+          </span>
+        </button>
       </nav>
     </div>
 
@@ -50,7 +86,7 @@
           <div>
             <span class="panel-kicker">Step 3</span>
             <h1 data-i18n="ideaIntroTitle">아이디어를 구체화하세요</h1>
-            <p data-i18n="ideaIntroBody">트렌드를 하나 고른 뒤 키워드와 제목 방향을 정하면 글 초안으로 바로 넘어갑니다.</p>
+            <p data-i18n="ideaIntroBody">트렌드를 하나 고른 뒤 제목과 글 방향을 정하면 초안 작성 단계로 넘어갑니다.</p>
           </div>
           <button type="button" id="back-button" class="secondary-button" data-i18n="back">이전</button>
         </div>
@@ -60,7 +96,7 @@
         <div class="section-head">
           <div>
             <h2 data-i18n="trendResultsHeading">추천 트렌드</h2>
-            <p class="section-subcopy" data-i18n="chooseTrendHint">지금 가장 자연스럽게 연결되는 출발점을 고르세요.</p>
+            <p class="section-subcopy" data-i18n="chooseTrendHint">이번 글과 가장 자연스럽게 연결되는 트렌드를 고르세요.</p>
           </div>
         </div>
         <div id="trend-results" class="trend-grid"></div>
@@ -70,29 +106,20 @@
         <article class="section-card">
           <div class="section-head">
             <div>
-              <h2 data-i18n="keywordSuggestions">추천 키워드</h2>
+              <h2 data-i18n="selectedTrendHeading">선택한 트렌드</h2>
             </div>
             <button type="button" id="refresh-ideas-button" class="text-button" data-i18n="refreshIdeas">다시 추천</button>
           </div>
 
           <div id="selected-trend-card" class="selected-trend-card"></div>
           <div id="idea-feedback" class="feedback-line is-hidden"></div>
-          <div id="keyword-suggestions" class="keyword-pills keyword-pills-wrap"></div>
-
-          <div class="inline-form">
-            <label class="field field-grow">
-              <span class="field-label" data-i18n="customKeyword">직접 키워드 입력</span>
-              <input id="custom-keyword-input" type="text" data-i18n-placeholder="customKeyword">
-            </label>
-            <button type="button" id="add-keyword-button" class="secondary-button" data-i18n="addKeyword">추가</button>
-          </div>
         </article>
 
         <article class="section-card">
           <div class="section-head">
             <div>
               <h2 data-i18n="titleSuggestions">제목 제안</h2>
-              <p id="selected-keyword-note" class="section-subcopy">-</p>
+              <p id="selected-keyword-note" class="section-subcopy" data-i18n="titlePickGuide">아래 제목 중 하나를 선택해 주세요.</p>
             </div>
           </div>
 
@@ -112,6 +139,16 @@
               <button type="button" class="segment" data-direction="anniversary" data-i18n="directionAnniversary">기념일형</button>
               <button type="button" class="segment" data-direction="guardian" data-i18n="directionGuardian">보호자 경험형</button>
             </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label" data-i18n="emojiMode">본문 이모티콘</span>
+            <div class="segmented-control direction-control">
+              <button type="button" class="segment is-active" data-emoji-mode="none" data-i18n="emojiModeNone">사용 안 함</button>
+              <button type="button" class="segment" data-emoji-mode="light" data-i18n="emojiModeLight">가볍게</button>
+              <button type="button" class="segment" data-emoji-mode="warm" data-i18n="emojiModeWarm">친근하게</button>
+            </div>
+            <p class="section-subcopy" data-i18n="emojiGuide">본문에만 자연스럽게 반영됩니다.</p>
           </div>
 
           <div class="section-footer">
