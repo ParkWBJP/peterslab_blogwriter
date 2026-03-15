@@ -2,11 +2,6 @@
   const state = PLBW.loadState();
   await PLBW.refreshHealth(state);
 
-  if (!state.trendPayload?.trends?.length || state.selectedTrendIndex < 0 || !state.selectedKeyword || !PLBW.getText(state.selectedTitleMap, state.language)) {
-    PLBW.goPhase("idea");
-    return;
-  }
-
   const loadingHeadline = document.getElementById("loading-headline");
   const loadingBody = document.getElementById("loading-body");
   const loadingList = document.getElementById("loading-list");
@@ -49,6 +44,19 @@
     clearInterval(loadingTimer);
   }
 
+  function renderBlockedState(message) {
+    PLBW.renderFrame(state, "writingLoading");
+    stopMessageRotation();
+    PLBW.setErrorMessage(errorCard, PLBW.t(state, "fetchErrorTitle"), message);
+  }
+
+  if (!state.trendPayload?.trends?.length || state.selectedTrendIndex < 0 || !PLBW.getText(state.selectedTitleMap, state.language)) {
+    renderBlockedState(PLBW.t(state, "writingNeedSelections"));
+    retryButton.addEventListener("click", () => PLBW.goPhase("idea"));
+    backButton.addEventListener("click", () => PLBW.goPhase("idea"));
+    return;
+  }
+
   function render() {
     PLBW.renderFrame(state, "writingLoading");
     errorCard.classList.add("is-hidden");
@@ -57,6 +65,10 @@
 
   function localizeDraftError(error) {
     if (!error?.message) {
+      return PLBW.t(state, "fetchErrorBody");
+    }
+
+    if (error.message === "REQUEST_TIMEOUT") {
       return PLBW.t(state, "fetchErrorBody");
     }
 
@@ -94,9 +106,11 @@
       });
 
       state.draftPayload = payload;
-      state.draftStatus = "review";
+      state.draftStatus = "completed";
+      state.completedAt = new Date().toLocaleString();
+      state.notion = { status: "idle", url: "" };
       PLBW.setBanner(state, "articleReady", "success");
-      PLBW.goPhase("review");
+      PLBW.goPhase("completed");
     } catch (error) {
       stopMessageRotation();
       requestStarted = false;

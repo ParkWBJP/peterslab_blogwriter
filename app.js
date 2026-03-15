@@ -1,12 +1,11 @@
 const PLBW = (() => {
   const STORAGE_KEY = "plbw-workflow-v3";
-  const PHASES = ["trend", "trendLoading", "idea", "writingLoading", "review", "completed"];
+  const PHASES = ["trend", "trendLoading", "idea", "writingLoading", "completed"];
   const PAGE_BY_PHASE = {
     trend: "./index.html",
     trendLoading: "./trend-loading.html",
     idea: "./idea.html",
     writingLoading: "./writing.html",
-    review: "./review.html",
     completed: "./completed.html",
   };
 
@@ -85,9 +84,9 @@ const PLBW = (() => {
       directionGuardian: "보호자 경험형",
       emojiMode: "본문 이모티콘",
       emojiGuide: "본문에만 자연스럽게 반영됩니다.",
-      emojiModeNone: "사용 안 함",
-      emojiModeLight: "가볍게",
-      emojiModeWarm: "친근하게",
+      emojiModeNone: "없음",
+      emojiModeLight: "최소(문단 1개)",
+      emojiModeWarm: "많음(문장 1개)",
       startWriting: "블로그 작성 시작",
       useThisTrend: "이 트렌드로 진행",
       pickTrendFirst: "먼저 트렌드를 하나 선택해 주세요.",
@@ -231,8 +230,8 @@ const PLBW = (() => {
       emojiMode: "Body Emojis",
       emojiGuide: "Applied naturally in the body only.",
       emojiModeNone: "None",
-      emojiModeLight: "Light",
-      emojiModeWarm: "Friendly",
+      emojiModeLight: "Minimal (One Paragraph)",
+      emojiModeWarm: "High (One Sentence)",
       startWriting: "Start Writing",
       useThisTrend: "Use This Trend",
       pickTrendFirst: "Select a trend first.",
@@ -376,8 +375,8 @@ const PLBW = (() => {
       emojiMode: "本文の絵文字",
       emojiGuide: "本文の中で自然にだけ反映します。",
       emojiModeNone: "なし",
-      emojiModeLight: "控えめ",
-      emojiModeWarm: "やや親しみ",
+      emojiModeLight: "最小（1段落）",
+      emojiModeWarm: "多め（1文ごと）",
       startWriting: "ブログ作成を開始",
       useThisTrend: "このトレンドで進む",
       pickTrendFirst: "先にトレンドを1つ選んでください。",
@@ -543,17 +542,32 @@ const PLBW = (() => {
     }
   }
 
-  async function postJSON(url, payload) {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload || {}),
-    });
-    const data = await safeJson(response);
-    if (!response.ok) {
-      throw new Error(data.error || t(loadState(), "fetchErrorBody"));
+  async function postJSON(url, payload, options = {}) {
+    const timeoutMs = options.timeoutMs || 180000;
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify(payload || {}),
+      });
+
+      const data = await safeJson(response);
+      if (!response.ok) {
+        throw new Error(data.error || t(loadState(), "fetchErrorBody"));
+      }
+      return data;
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        throw new Error("REQUEST_TIMEOUT");
+      }
+      throw error;
+    } finally {
+      window.clearTimeout(timeoutId);
     }
-    return data;
   }
 
   async function refreshHealth(state) {
@@ -584,8 +598,7 @@ const PLBW = (() => {
     if (phase === "trend") return true;
     if (phase === "trendLoading") return Boolean(state.trendPayload?.trends?.length || phase === "trendLoading");
     if (phase === "idea") return Boolean(state.trendPayload?.trends?.length);
-    if (phase === "writingLoading") return Boolean(state.selectedTrendIndex >= 0 && state.selectedKeyword && getText(state.selectedTitleMap, state.language));
-    if (phase === "review") return Boolean(state.draftPayload?.safeVersion);
+    if (phase === "writingLoading") return Boolean(state.selectedTrendIndex >= 0 && getText(state.selectedTitleMap, state.language));
     if (phase === "completed") return Boolean(state.draftPayload?.safeVersion);
     return false;
   }
@@ -673,6 +686,11 @@ const PLBW = (() => {
     const currentIndex = phaseIndex(currentPhase);
     document.querySelectorAll("[data-phase-nav]").forEach((button) => {
       const phase = button.dataset.phaseNav;
+      if (!PAGE_BY_PHASE[phase]) {
+        button.hidden = true;
+        return;
+      }
+
       const idx = phaseIndex(phase);
       const isCurrent = phase === currentPhase;
       const isComplete = idx < currentIndex;

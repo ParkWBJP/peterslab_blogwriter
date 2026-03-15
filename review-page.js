@@ -2,11 +2,6 @@
   const state = PLBW.loadState();
   await PLBW.refreshHealth(state);
 
-  if (!state.draftPayload?.safeVersion) {
-    PLBW.goPhase("idea");
-    return;
-  }
-
   const backButton = document.getElementById("back-button");
   const saveButton = document.getElementById("save-button");
   const regenerateButton = document.getElementById("regenerate-button");
@@ -24,6 +19,15 @@
   const rationalePanel = document.getElementById("rationale-panel");
   const compliancePanel = document.getElementById("compliance-panel");
   const evidencePanel = document.getElementById("trend-evidence-panel");
+
+  if (!state.draftPayload?.safeVersion) {
+    PLBW.renderFrame(state, "review");
+    rationalePanel.innerHTML = `<p class="empty-copy">${PLBW.t(state, "fetchErrorBody")}</p>`;
+    compliancePanel.innerHTML = "";
+    evidencePanel.innerHTML = "";
+    backButton.addEventListener("click", () => PLBW.goPhase("idea"));
+    return;
+  }
 
   function trendTitle() {
     const trend = state.trendPayload?.trends?.[state.selectedTrendIndex];
